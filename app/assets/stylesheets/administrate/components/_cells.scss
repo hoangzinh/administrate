@@ -1,5 +1,6 @@
 .cell-label {
   @include data-label;
+  padding-right: 15px;
 
   &:hover {
     a {
