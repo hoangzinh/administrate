@@ -13,6 +13,7 @@ module Administrate
         resources: resources,
         search_term: search_term,
         page: page,
+        show_search_bar: show_search_bar?
       }
     end
 
@@ -100,11 +101,7 @@ module Administrate
     end
 
     def resource_params
-      params.require(resource_name).permit(*permitted_attributes)
-    end
-
-    def permitted_attributes
-      dashboard.permitted_attributes
+      params.require(resource_name).permit(dashboard.permitted_attributes)
     end
 
     delegate :resource_class, :resource_name, :namespace, to: :resource_resolver
@@ -121,6 +118,12 @@ module Administrate
         "administrate.controller.#{key}",
         resource: resource_resolver.resource_title,
       )
+    end
+
+    def show_search_bar?
+      dashboard.attribute_types_for(
+        dashboard.collection_attributes
+      ).any? { |_name, attribute| attribute.searchable? }
     end
   end
 end
